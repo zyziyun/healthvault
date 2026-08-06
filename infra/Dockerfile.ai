@@ -1,0 +1,8 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY apps/ai-api/pyproject.toml .
+RUN pip install --no-cache-dir "fastapi[standard]>=0.115" "pydantic-settings>=2.3"
+COPY apps/ai-api/src ./src
+EXPOSE 8000
+ENV PYTHONPATH=/app/src
+CMD ["fastapi", "run", "src/healthvault_ai/main.py", "--port", "8000"]
