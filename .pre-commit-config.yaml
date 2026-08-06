@@ -1,0 +1,11 @@
+# Python side runs ruff on every commit. Java side is checked in CI via gradle,
+# because Java formatters need the JDK toolchain and are slower than a git hook.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+        files: ^apps/ai-api/
+      - id: ruff-format
+        files: ^apps/ai-api/

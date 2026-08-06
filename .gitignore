@@ -1,0 +1,13 @@
+# secrets
+.env
+# python
+.venv/
+__pycache__/
+*.pyc
+# java / gradle
+apps/platform-api/build/
+apps/platform-api/.gradle/
+# node
+node_modules/
+# os
+.DS_Store
