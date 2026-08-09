@@ -19,7 +19,8 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password_hash", nullable = false)
+    // Nullable: OAuth-only users have no local password.
+    @Column(name = "password_hash")
     private String passwordHash;
 
     @Column(name = "created_at", insertable = false, updatable = false)
