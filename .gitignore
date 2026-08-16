@@ -11,3 +11,5 @@ apps/platform-api/.gradle/
 node_modules/
 # os
 .DS_Store
+# IDE
+.idea/
