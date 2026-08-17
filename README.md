@@ -12,6 +12,22 @@
 - `apps/web`  React 前端，调用两个服务。
 - 两个服务不互相 RPC 包装。共享数据走 S3 加 Postgres，AI 侧通过 Redis 队列收到有新文件要处理的消息后自己去取。
 
+## 核心接口
+
+platform-api，受保护接口要带 `Authorization: Bearer <jwt>`：
+
+- `POST /auth/register`、`POST /auth/login`、`POST /auth/oauth/{provider}`、`POST /auth/guest`  公开
+- `GET  /auth/me`  返回当前登录用户
+- `POST /documents`  上传图片或 PDF，进对象存储，元数据进 Postgres
+- `GET  /documents`、`GET /documents/{id}`、`DELETE /documents/{id}`  全部按当前用户 scoped
+- `GET  /documents/{id}/download`  返回 presigned URL
+
+ai-api：
+
+- `POST /extract`  输入文档文本，用 JSON Schema 结构化输出提取字段，返回 extraction 加 token 成本延迟
+
+对象存储默认走本地文件系统，本地和 CI 无需凭证；用 `s3` profile 切到 MinIO 或真 S3。
+
 ## 本地启动
 
 前置：Docker、JDK 21、Python 3.11。
