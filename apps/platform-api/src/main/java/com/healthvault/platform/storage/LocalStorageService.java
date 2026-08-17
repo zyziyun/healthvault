@@ -2,7 +2,7 @@ package com.healthvault.platform.storage;
 
 import com.healthvault.platform.error.ApiException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ import java.util.UUID;
  * key is portable between the two implementations.
  */
 @Service
-@ConditionalOnMissingBean(name = "s3StorageService")
+@Profile("!s3")
 public class LocalStorageService implements StorageService {
 
     private final Path root;

@@ -15,5 +15,31 @@ services:
     ports:
       - "6379:6379"
 
+  # S3-compatible object store for local dev. Run platform-api with the "s3" profile to use it.
+  # Console at http://localhost:9001 (minioadmin / minioadmin), API at http://localhost:9000.
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY:-minioadmin}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+
+  # One-shot: create the bucket the app expects, then exit.
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      until mc alias set local http://minio:9000 ${S3_ACCESS_KEY:-minioadmin} ${S3_SECRET_KEY:-minioadmin}; do sleep 1; done;
+      mc mb --ignore-existing local/${S3_BUCKET:-healthvault};
+      "
+
 volumes:
   dbdata:
+  miniodata:
